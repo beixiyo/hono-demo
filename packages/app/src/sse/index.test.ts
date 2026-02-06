@@ -1,9 +1,17 @@
 import { describe, expect, it } from 'bun:test'
+import { sign } from 'hono/jwt'
 import { app } from '../index'
+
+const JWT_SECRET = process.env.JWT_SECRET || 'hono-demo-secret-change-in-production'
 
 describe('SSE Module', () => {
   it('should return 200 and event-stream content type', async () => {
-    const res = await app.request('/sse/events')
+    const token = await sign({ sub: 'user123', exp: Math.floor(Date.now() / 1000) + 60 }, JWT_SECRET, 'HS256')
+    const res = await app.request('/api/sse/events', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     expect(res.status).toBe(200)
     expect(res.headers.get('content-type')).toContain('text/event-stream')
     

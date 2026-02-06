@@ -29,11 +29,11 @@ const rootDir = join(import.meta.dirname, '..')
 app.use('/public/*', serveStatic({ root: rootDir }))
 
 // 3. 注册功能模块
-app.route('/auth', authModule)
-app.route('/file', fileModule)
-app.route('/users', userModule)
-app.route('/sse', sseModule)
-app.route('/ws', wsModule)
+app.route('/api/auth', authModule)
+app.route('/api/file', fileModule)
+app.route('/api/users', userModule)
+app.route('/api/sse', sseModule)
+app.route('/api/ws', wsModule)
 
 // 4. 统一配置 OpenAPI 文档
 isDev() && registerOpenAPI(app)

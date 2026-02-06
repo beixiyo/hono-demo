@@ -1,6 +1,6 @@
 import { sign } from 'hono/jwt'
 
-export const JWT_SECRET = 'template-secret-key'
+const JWT_SECRET = process.env.JWT_SECRET || 'hono-demo-secret-change-in-production'
 
 export const authService = {
   async generateToken(userId: string) {

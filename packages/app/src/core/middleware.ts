@@ -11,6 +11,11 @@ import { compress } from 'hono/compress'
 import { cache } from 'hono/cache'
 import { jwt } from 'hono/jwt'
 
+const JWT_SECRET = process.env.JWT_SECRET || 'hono-demo-secret-change-in-production'
+const JWT_PUBLIC_PATHS = new Set([
+  '/api/auth/jwt/login',
+])
+
 export const registerMiddleware = (app: OpenAPIHono<AppEnv>) => {
   // 1. 基础与安全
   app.use('*', requestId())
@@ -23,10 +28,20 @@ export const registerMiddleware = (app: OpenAPIHono<AppEnv>) => {
   // 2. 性能优化
   app.use('*', compress())
   app.use('*', etag())
-  
-  // 3. 缓存 (仅 GET)
-  app.get('*', cache({ cacheName: 'my-app', cacheControl: 'max-age=3600' }))
 
-  // 4. 认证 (示例路径保护)
-  app.use('/api/protected/*', jwt({ secret: 'secret-key', alg: 'HS256' }))
+  // 3. 缓存 (仅 GET)
+  // Bun test 环境下可能没有 Cache Storage API（caches），需要兜底避免告警/异常
+  if (typeof (globalThis as any).caches !== 'undefined') {
+    app.get('*', cache({ cacheName: 'my-app', cacheControl: 'max-age=3600' }))
+  }
+
+  // 4. JWT 校验（统一在此）
+  const jwtMiddleware = jwt({ secret: JWT_SECRET, alg: 'HS256' })
+  app.use('/api/*', async (c, next) => {
+    if (JWT_PUBLIC_PATHS.has(c.req.path)) {
+      return next()
+    }
+
+    return jwtMiddleware(c, next)
+  })
 }

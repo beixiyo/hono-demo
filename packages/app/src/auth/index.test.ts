@@ -1,12 +1,13 @@
 import { describe, expect, test } from 'bun:test'
 import { sign } from 'hono/jwt'
 import { app } from '../index'
-import { JWT_SECRET } from './service'
+
+const JWT_SECRET = process.env.JWT_SECRET || 'hono-demo-secret-change-in-production'
 
 describe('认证模块功能测试', () => {
   // 1. JWT 功能测试
   test('JWT 流程测试: 登录并访问受保护接口', async () => {
-    const loginRes = await app.request('/auth/jwt/login', {
+    const loginRes = await app.request('/api/auth/jwt/login', {
       method: 'POST',
       headers: {
         Origin: 'http://localhost',
@@ -15,7 +16,7 @@ describe('认证模块功能测试', () => {
     const { token } = await loginRes.json()
     expect(token).toBeDefined()
 
-    const protectedRes = await app.request('/auth/jwt/protected', {
+    const protectedRes = await app.request('/api/auth/jwt/protected', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -26,10 +27,10 @@ describe('认证模块功能测试', () => {
   })
 
   test('JWT 异常测试: 错误或缺失 token 应该返回 401', async () => {
-    const res1 = await app.request('/auth/jwt/protected')
+    const res1 = await app.request('/api/auth/jwt/protected')
     expect(res1.status).toBe(401)
 
-    const res2 = await app.request('/auth/jwt/protected', {
+    const res2 = await app.request('/api/auth/jwt/protected', {
       headers: {
         Authorization: 'Bearer invalid-token',
         Origin: 'http://localhost',
@@ -45,7 +46,7 @@ describe('认证模块功能测试', () => {
     }
     const expiredToken = await sign(payload, JWT_SECRET, 'HS256')
 
-    const res = await app.request('/auth/jwt/protected', {
+    const res = await app.request('/api/auth/jwt/protected', {
       headers: {
         Authorization: `Bearer ${expiredToken}`,
       },
