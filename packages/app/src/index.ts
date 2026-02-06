@@ -13,6 +13,7 @@ import { fileModule } from './file'
 import { userModule } from './user'
 import { sseModule } from './sse'
 import { wsModule } from './websocket'
+import { isDev } from 'shared'
 
 /**
  * 应用主入口
@@ -35,7 +36,7 @@ app.route('/sse', sseModule)
 app.route('/ws', wsModule)
 
 // 4. 统一配置 OpenAPI 文档
-registerOpenAPI(app)
+isDev() && registerOpenAPI(app)
 
 // 5. 全局错误与 404 处理
 app.onError(errorHandler)
@@ -50,7 +51,7 @@ export type ServeOptions = Parameters<typeof Bun.serve>[0]
 
 const endpoint: ServeOptions = {
   fetch: app.fetch,
-  port: 3001,
+  port: parseInt(process.env.PORT || '3002'),
   websocket: websocket as any
 }
 
