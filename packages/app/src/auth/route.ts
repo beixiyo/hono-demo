@@ -1,5 +1,6 @@
 import { createRoute } from '@hono/zod-openapi'
-import { LoginResponseSchema, MessageSchema, ProfileSchema } from './schema'
+import { LoginResponseSchema, MessageSchema } from './schema'
+import { createErrorSchema, createSuccessSchema } from '../core/response'
 
 export const loginRoute = createRoute({
   method: 'post',
@@ -7,7 +8,7 @@ export const loginRoute = createRoute({
   tags: ['身份认证'],
   summary: 'JWT 登录',
   responses: {
-    200: { content: { 'application/json': { schema: LoginResponseSchema } }, description: '成功' },
+    200: { content: { 'application/json': { schema: createSuccessSchema(LoginResponseSchema) } }, description: '成功' },
   },
 })
 
@@ -18,7 +19,7 @@ export const protectedRoute = createRoute({
   summary: 'JWT 受保护接口',
   security: [{ Bearer: [] }],
   responses: {
-    200: { content: { 'application/json': { schema: MessageSchema } }, description: '成功' },
-    401: { description: '未授权' },
+    200: { content: { 'application/json': { schema: createSuccessSchema(MessageSchema) } }, description: '成功' },
+    401: { content: { 'application/json': { schema: createErrorSchema() } }, description: '未授权' },
   },
 })

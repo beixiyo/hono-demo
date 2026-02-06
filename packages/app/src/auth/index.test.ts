@@ -13,7 +13,8 @@ describe('认证模块功能测试', () => {
         Origin: 'http://localhost',
       },
     })
-    const { token } = await loginRes.json()
+    const loginData = await loginRes.json()
+    const token = loginData.data?.token
     expect(token).toBeDefined()
 
     const protectedRes = await app.request('/api/auth/jwt/protected', {
@@ -23,7 +24,8 @@ describe('认证模块功能测试', () => {
     })
     expect(protectedRes.status).toBe(200)
     const data = await protectedRes.json()
-    expect(data.message).toBe('通过 JWT 验证')
+    expect(data.success).toBe(true)
+    expect(data.data.message).toBe('通过 JWT 验证')
   })
 
   test('JWT 异常测试: 错误或缺失 token 应该返回 401', async () => {

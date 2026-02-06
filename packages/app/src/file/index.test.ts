@@ -21,10 +21,11 @@ describe('文件模块功能测试', () => {
     })
 
     expect(res.status).toBe(200)
-    const data = await res.status === 200
+    const data = res.status === 200
       ? await res.json()
       : {}
-    expect(data.message).toBe('文件上传成功')
-    expect(data.url).toBe('/public/uploads/test-upload.txt')
+    expect(data.success).toBe(true)
+    expect(data.data.message).toBe('文件上传成功')
+    expect(data.data.url).toBe('/public/uploads/test-upload.txt')
   })
 })

@@ -1,5 +1,6 @@
 import { createRoute } from '@hono/zod-openapi'
 import { FileUploadSchema, UploadResponseSchema } from './schema'
+import { createErrorSchema, createSuccessSchema } from '../core/response'
 
 export const uploadRoute = createRoute({
   method: 'post',
@@ -16,7 +17,7 @@ export const uploadRoute = createRoute({
     },
   },
   responses: {
-    200: { content: { 'application/json': { schema: UploadResponseSchema } }, description: '上传成功' },
-    400: { description: '参数错误' },
+    200: { content: { 'application/json': { schema: createSuccessSchema(UploadResponseSchema) } }, description: '上传成功' },
+    400: { content: { 'application/json': { schema: createErrorSchema() } }, description: '参数错误' },
   },
 })

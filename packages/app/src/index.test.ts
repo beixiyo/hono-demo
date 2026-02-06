@@ -23,8 +23,9 @@ describe('应用全局功能测试', () => {
     })
     expect(res.status).toBe(200)
     const data = await res.json()
-    expect(data.id).toBe('123')
-    expect(data.name).toBe('Ultra-man')
+    expect(data.success).toBe(true)
+    expect(data.data.id).toBe('123')
+    expect(data.data.name).toBe('Ultra-man')
   })
 
   test('未登录访问受保护路由应返回 401', async () => {
