@@ -1,0 +1,13 @@
+{
+  "name": "hono-demo-monorepo",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "dev": "bun run -F '*' dev",
+    "build": "bun run -F '*' build",
+    "test": "bun run -F '*' test"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.8"
+  }
+}
