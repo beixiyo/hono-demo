@@ -1,6 +1,7 @@
 import { OpenAPIHono, createRoute,type RouteHandler } from '@hono/zod-openapi'
 import { upgradeWebSocket } from 'hono/bun'
 import type { AppEnv } from '../types'
+import { Controller } from '../core/controller-registry'
 
 export const wsModule = new OpenAPIHono<AppEnv>()
 
@@ -35,3 +36,6 @@ wsModule.openapi(
     }
   }) as RouteHandler<typeof wsRoute, AppEnv>
 )
+
+@Controller({ basePath: '/api/ws', module: wsModule })
+export class WsControllerModule {}

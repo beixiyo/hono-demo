@@ -6,13 +6,14 @@ import type { AppEnv } from './types'
 import { registerMiddleware } from './core/middleware'
 import { errorHandler, notFoundHandler } from './core/error-handler'
 import { registerOpenAPI } from './core/openapi'
+import { registerControllers } from './core/controller-registry'
 
 import { websocket } from 'hono/bun'
-import { authModule } from './auth'
-import { fileModule } from './file'
-import { userModule } from './user'
-import { sseModule } from './sse'
-import { wsModule } from './websocket'
+import './auth'
+import './file'
+import './user'
+import './sse'
+import './websocket'
 import { isDev } from 'shared'
 
 /**
@@ -29,11 +30,7 @@ const rootDir = join(import.meta.dirname, '..')
 app.use('/public/*', serveStatic({ root: rootDir }))
 
 // 3. 注册功能模块
-app.route('/api/auth', authModule)
-app.route('/api/file', fileModule)
-app.route('/api/users', userModule)
-app.route('/api/sse', sseModule)
-app.route('/api/ws', wsModule)
+registerControllers(app)
 
 // 4. 统一配置 OpenAPI 文档
 isDev() && registerOpenAPI(app)

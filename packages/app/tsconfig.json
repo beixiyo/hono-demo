@@ -8,6 +8,7 @@
     "jsxImportSource": "hono/jsx",
     "types": ["bun"],
     "allowImportingTsExtensions": true,
+    "experimentalDecorators": true,
     "noEmit": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
