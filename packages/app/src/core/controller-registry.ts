@@ -4,6 +4,7 @@
  */
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
 import type { AppEnv } from '../types'
+import { routesKey } from './constants';
 
 const registry: ControllerEntry[] = []
 
@@ -17,6 +18,12 @@ export function Controller(param: string | ControllerOptions): ClassDecorator {
   const decorator: ClassDecorator = (target) => {
     const controller = target as unknown as ControllerClass
     const module = options.module
+
+    // 防止重复 basePath 注册
+    if (registry.some(entry => entry.basePath === options.basePath)) {
+      throw new Error(`Controller basePath 重复: ${options.basePath}`)
+    }
+
     registry.push({ basePath: options.basePath, module, controller })
   }
 
@@ -36,6 +43,7 @@ export function registerControllers(app: OpenAPIHono<AppEnv>) {
       const instance = new entry.controller()
 
       routes.forEach(route => {
+        // 由 packages/app/src/core/controller-registry.ts 装饰器收集的 route 对象
         const routeObject = 'route' in route
           ? route.route
           : createRoute({ method: route.method, path: route.path, ...route.options })
@@ -48,8 +56,6 @@ export function registerControllers(app: OpenAPIHono<AppEnv>) {
     app.route(entry.basePath, module)
   })
 }
-
-const routesKey = Symbol('controller:routes')
 
 function getRoutes(target: ControllerClass): RouteMeta[] {
   return (target as any)[routesKey] ?? []
@@ -66,19 +72,21 @@ function createMethodDecorator(method: MethodName) {
   return function (pathOrRoute: string | ReturnType<typeof createRoute>, options?: RouteOptions) {
     return function (target: object, propertyKey: string | symbol) {
       if (typeof pathOrRoute === 'string') {
+        const path = pathOrRoute
         const normalizedOptions = (options ?? {}) as RouteOptions
 
         addRoute(target, {
           method,
-          path: pathOrRoute,
+          path,
           options: normalizedOptions,
           handlerName: propertyKey.toString(),
         })
         return
       }
 
+      const route = pathOrRoute
       addRoute(target, {
-        route: pathOrRoute,
+        route,
         handlerName: propertyKey.toString(),
       })
     }

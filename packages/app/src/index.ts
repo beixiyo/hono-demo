@@ -1,7 +1,6 @@
 import { join } from 'node:path'
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { serveStatic } from 'hono/bun'
-
 import type { AppEnv } from './types'
 import { registerMiddleware } from './core/middleware'
 import { errorHandler, notFoundHandler } from './core/error-handler'
