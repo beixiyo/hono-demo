@@ -1,14 +1,16 @@
 import { sign } from 'hono/jwt'
-
-const JWT_SECRET = process.env.JWT_SECRET || 'hono-demo-secret-change-in-production'
+import { AUTH_CONFIG, JWT_CONFIG } from '@/core/constants'
 
 export const authService = {
   async generateToken(userId: string) {
-    const payload = {
-      sub: userId,
-      role: 'admin',
-      exp: Math.floor(Date.now() / 1000) + 60 * 60,
-    }
-    return await sign(payload, JWT_SECRET, 'HS256')
+    return await sign(
+      {
+        sub: userId,
+        role: AUTH_CONFIG.defaultUserRole,
+        exp: Math.floor(Date.now() / 1000) + JWT_CONFIG.expSeconds,
+      },
+      JWT_CONFIG.secret,
+      'HS256'
+    )
   },
 }

@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 import { sign } from 'hono/jwt'
 import { app } from '../index'
-
-const JWT_SECRET = process.env.JWT_SECRET || 'hono-demo-secret-change-in-production'
+import { JWT_CONFIG, TEST_CONFIG } from '@/core/constants'
 
 describe('认证模块功能测试', () => {
   // 1. JWT 功能测试
@@ -10,7 +9,7 @@ describe('认证模块功能测试', () => {
     const loginRes = await app.request('/api/auth/jwt/login', {
       method: 'POST',
       headers: {
-        Origin: 'http://localhost',
+        Origin: TEST_CONFIG.origin,
       },
     })
     const loginData = await loginRes.json()
@@ -35,7 +34,7 @@ describe('认证模块功能测试', () => {
     const res2 = await app.request('/api/auth/jwt/protected', {
       headers: {
         Authorization: 'Bearer invalid-token',
-        Origin: 'http://localhost',
+        Origin: TEST_CONFIG.origin,
       },
     })
     expect(res2.status).toBe(401)
@@ -46,7 +45,7 @@ describe('认证模块功能测试', () => {
       sub: 'user123',
       exp: Math.floor(Date.now() / 1000) - 10, // 10秒前过期
     }
-    const expiredToken = await sign(payload, JWT_SECRET, 'HS256')
+    const expiredToken = await sign(payload, JWT_CONFIG.secret, 'HS256')
 
     const res = await app.request('/api/auth/jwt/protected', {
       headers: {

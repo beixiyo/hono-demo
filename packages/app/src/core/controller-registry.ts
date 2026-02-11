@@ -4,7 +4,7 @@
  */
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
 import type { AppEnv } from '../types'
-import { routesKey } from './constants';
+import { CORE_CONFIG } from './constants';
 
 const registry: ControllerEntry[] = []
 
@@ -58,14 +58,14 @@ export function registerControllers(app: OpenAPIHono<AppEnv>) {
 }
 
 function getRoutes(target: ControllerClass): RouteMeta[] {
-  return (target as any)[routesKey] ?? []
+  return (target as any)[CORE_CONFIG.routesKey] ?? []
 }
 
 function addRoute(target: object, meta: RouteMeta) {
   const constructor = (target as any).constructor
-  const routes = (constructor as any)[routesKey] ?? []
+  const routes = (constructor as any)[CORE_CONFIG.routesKey] ?? []
   routes.push(meta)
-  ;(constructor as any)[routesKey] = routes
+  ;(constructor as any)[CORE_CONFIG.routesKey] = routes
 }
 
 function createMethodDecorator(method: MethodName) {

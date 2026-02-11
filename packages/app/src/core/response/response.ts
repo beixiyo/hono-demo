@@ -1,6 +1,7 @@
 import type { Context } from 'hono'
 import type { JsonOkOptions, ApiErrorResponse, ApiSuccessResponse } from '@/types'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
+import { MESSAGE_CONFIG } from '@/core/constants'
 
 export const jsonOk = <T>(
   c: Context,
@@ -9,7 +10,7 @@ export const jsonOk = <T>(
 ) => {
   const body: ApiSuccessResponse<T> = {
     success: true,
-    message: options?.message ?? '成功',
+    message: options?.message ?? MESSAGE_CONFIG.successDefault,
     data,
     requestId: c.get('requestId'),
   }

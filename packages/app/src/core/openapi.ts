@@ -1,16 +1,25 @@
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { Scalar } from '@scalar/hono-api-reference'
 import type { AppEnv } from '../types'
+import { OPENAPI_CONFIG, SCALAR_CONFIG } from '@/core/constants'
 
 export const registerOpenAPI = (app: OpenAPIHono<AppEnv>) => {
-  app.doc('/doc', {
-    openapi: '3.0.0',
-    info: {
-      version: '1.0.0',
-      title: '模板项目 API',
-      description: '一个遵循 CSS (Controller-Service-Schema) 模式的重构项目',
-    },
+  app.doc(OPENAPI_CONFIG.docPath, {
+    openapi: OPENAPI_CONFIG.version,
+    info: OPENAPI_CONFIG.info,
   })
 
-  app.get('/ui', Scalar({ url: '/doc', theme: 'deepSpace' }))
+  app.get(OPENAPI_CONFIG.uiPath, Scalar({
+    url: OPENAPI_CONFIG.docPath,
+    theme: SCALAR_CONFIG.theme,
+    persistAuth: SCALAR_CONFIG.persistAuth,  // 持久化认证信息到 localStorage
+    authentication: {
+      preferredSecurityScheme: SCALAR_CONFIG.preferredSecurityScheme,
+      securitySchemes: {
+        [SCALAR_CONFIG.httpBearerName]: {
+          token: SCALAR_CONFIG.demoBearerToken,
+        },
+      },
+    },
+  }))
 }

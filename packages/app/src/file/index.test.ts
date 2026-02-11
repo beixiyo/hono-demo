@@ -1,8 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 import { sign } from 'hono/jwt'
 import { app } from '../index'
-
-const JWT_SECRET = process.env.JWT_SECRET || 'hono-demo-secret-change-in-production'
+import { JWT_CONFIG, TEST_CONFIG } from '@/core/constants'
 
 describe('文件模块功能测试', () => {
   test('文件上传功能测试', async () => {
@@ -10,13 +9,17 @@ describe('文件模块功能测试', () => {
     const file = new File(['test content'], 'test-upload.txt', { type: 'text/plain' })
     formData.append('file', file)
 
-    const token = await sign({ sub: 'user123', exp: Math.floor(Date.now() / 1000) + 60 }, JWT_SECRET, 'HS256')
+    const token = await sign(
+      { sub: 'user123', exp: Math.floor(Date.now() / 1000) + 60 },
+      JWT_CONFIG.secret,
+      'HS256'
+    )
     const res = await app.request('/api/file/upload', {
       method: 'POST',
       body: formData,
       headers: {
         Authorization: `Bearer ${token}`,
-        Origin: 'http://localhost',
+        Origin: TEST_CONFIG.origin,
       },
     })
 
