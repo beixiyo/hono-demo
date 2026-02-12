@@ -10,9 +10,10 @@
     "lint": "eslint src --fix --quiet"
   },
   "dependencies": {
-    "shared": "workspace:*",
     "@hono/zod-openapi": "^1.2.1",
+    "drizzle-orm": "^0.45.1",
     "hono": "^4.11.7",
+    "shared": "workspace:*",
     "zod": "^4.3.6"
   },
   "devDependencies": {

@@ -8,12 +8,23 @@ import { applyToContainer, Container } from './core/di'
 import { errorHandler, notFoundHandler } from './core/error-handler'
 import { registerMiddleware } from './core/middleware'
 import { registerOpenAPI } from './core/openapi'
+import { createPgDb, PgDbToken } from './db/client'
+import { logger } from './utils'
 import './register'
-import { logger } from './utils';
 
 /** 创建并配置 DI 容器 */
 function createContainer(): Container {
   const container = new Container()
+
+  /**
+   * 注册基础设施（数据库等）
+   *
+   * users 等表当前使用的是 `pgTable`，因此这里显式注册 PostgreSQL 版本的 Db。
+   * 若未来需要 SQLite，可在此处额外注册 `SqliteDbToken`，并为其编写独立的 Repository / Service。
+   */
+  const db = createPgDb()
+  container.register({ token: PgDbToken, useValue: db })
+
   applyToContainer(container)
   return container
 }
