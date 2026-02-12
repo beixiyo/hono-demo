@@ -1,21 +1,30 @@
-import type { RouteHandler } from '@hono/zod-openapi'
-import type { AppEnv } from '../types'
+import type { LoginRouteContext, LoginRouteReturn, ProtectedRouteContext, ProtectedRouteReturn } from './route'
+import { Controller, Get, Post } from '@/core/controller'
 import { jsonOk } from '@/core/response'
-import { Controller, Get, Post } from '../core/controller'
-import { loginRoute, protectedRoute } from './route'
-import { authService } from './service'
+import { Inject } from '../core/di'
+import {
+  loginRoute,
+
+  protectedRoute,
+
+} from './route'
+import { AuthService } from './service'
 
 @Controller('/api/auth')
 export class AuthController {
+  constructor(
+    @Inject(AuthService) private readonly authService: AuthService,
+  ) {}
+
   @Post(loginRoute)
-  async login(c: Parameters<RouteHandler<typeof loginRoute, AppEnv>>[0]): Promise<ReturnType<RouteHandler<typeof loginRoute, AppEnv>>> {
-    const token = await authService.generateToken('user123')
-    return jsonOk(c, { token }) as ReturnType<RouteHandler<typeof loginRoute, AppEnv>>
+  async login(c: LoginRouteContext): Promise<LoginRouteReturn> {
+    const token = await this.authService.generateToken('user123')
+    return jsonOk(c, { token }) as LoginRouteReturn
   }
 
   @Get(protectedRoute)
-  async getProfile(c: Parameters<RouteHandler<typeof protectedRoute, AppEnv>>[0]): Promise<ReturnType<RouteHandler<typeof protectedRoute, AppEnv>>> {
+  async getProfile(c: ProtectedRouteContext): Promise<ProtectedRouteReturn> {
     const payload = c.get('jwtPayload')
-    return jsonOk(c, { message: '通过 JWT 验证', user: payload.sub }) as ReturnType<RouteHandler<typeof protectedRoute, AppEnv>>
+    return jsonOk(c, { message: '通过 JWT 验证', user: payload.sub }) as ProtectedRouteReturn
   }
 }

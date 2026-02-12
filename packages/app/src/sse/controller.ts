@@ -1,15 +1,12 @@
-import type { RouteHandler } from '@hono/zod-openapi'
-import type { AppEnv } from '../types'
+import type { SseRouteContext, SseRouteReturn } from './route'
 import { streamSSE } from 'hono/streaming'
 import { Controller, Get } from '@/core/controller'
 import { sseRoute } from './route'
 
-type SseHandler = RouteHandler<typeof sseRoute, AppEnv>
-
 @Controller('/api/sse')
 export class SseController {
   @Get(sseRoute)
-  async events(c: Parameters<SseHandler>[0]): Promise<ReturnType<SseHandler>> {
+  async events(c: SseRouteContext): Promise<SseRouteReturn> {
     let count = 0
     return streamSSE(c, async (stream) => {
       let id = 0
@@ -23,6 +20,6 @@ export class SseController {
         })
         await stream.sleep(100)
       }
-    }) as unknown as ReturnType<SseHandler>
+    }) as unknown as SseRouteReturn
   }
 }

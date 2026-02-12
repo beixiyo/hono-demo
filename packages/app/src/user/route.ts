@@ -1,3 +1,4 @@
+import type { HandlerContext, HandlerReturn } from '@/core/controller'
 import { createRoute } from '@hono/zod-openapi'
 import { createSuccessSchema } from '../core/response'
 import { ParamsSchema, UserSchema } from './schema'
@@ -17,3 +18,6 @@ export const getUserRoute = createRoute({
     },
   },
 })
+
+export type GetUserRouteContext = HandlerContext<typeof getUserRoute>
+export type GetUserRouteReturn = HandlerReturn<typeof getUserRoute>

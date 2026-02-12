@@ -1,3 +1,4 @@
+import type { HandlerContext, HandlerReturn } from '@/core/controller'
 import { createRoute } from '@hono/zod-openapi'
 import { createErrorSchema, createSuccessSchema } from '../core/response'
 import { LoginResponseSchema, MessageSchema } from './schema'
@@ -23,3 +24,8 @@ export const protectedRoute = createRoute({
     401: { content: { 'application/json': { schema: createErrorSchema() } }, description: '未授权' },
   },
 })
+
+export type LoginRouteContext = HandlerContext<typeof loginRoute>
+export type LoginRouteReturn = HandlerReturn<typeof loginRoute>
+export type ProtectedRouteContext = HandlerContext<typeof protectedRoute>
+export type ProtectedRouteReturn = HandlerReturn<typeof protectedRoute>

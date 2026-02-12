@@ -1,6 +1,13 @@
-import type { createRoute, OpenAPIHono } from '@hono/zod-openapi'
+import type { createRoute, OpenAPIHono, RouteHandler } from '@hono/zod-openapi'
 import type { AppEnv } from '../../types'
 import type { Container } from '../di'
+
+/** 从 OpenAPI 路由推导出的 handler 上下文类型，用于 controller 方法参数 */
+export type HandlerContext<R extends RouteConfig> = Parameters<RouteHandler<R, AppEnv>>[0]
+/** 从 OpenAPI 路由推导出的 handler 的 next 参数（如 WebSocket 等需要 next 的路由） */
+export type HandlerNext<R extends RouteConfig> = Parameters<RouteHandler<R, AppEnv>>[1]
+/** 从 OpenAPI 路由推导出的 handler 返回类型，用于 controller 方法返回与断言 */
+export type HandlerReturn<R extends RouteConfig> = ReturnType<RouteHandler<R, AppEnv>>
 
 export type RouteConfig = Parameters<typeof createRoute>[0]
 export type RouteOptions = Omit<RouteConfig, 'method' | 'path'>

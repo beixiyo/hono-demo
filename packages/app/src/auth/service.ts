@@ -1,7 +1,9 @@
 import { sign } from 'hono/jwt'
 import { AUTH_CONFIG, JWT_CONFIG } from '@/core/constants'
+import { Service } from '@/core/di'
 
-export const authService = {
+@Service()
+export class AuthService {
   async generateToken(userId: string) {
     return await sign(
       {
@@ -12,5 +14,5 @@ export const authService = {
       JWT_CONFIG.secret,
       'HS256',
     )
-  },
+  }
 }

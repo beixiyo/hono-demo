@@ -1,15 +1,12 @@
-import type { RouteHandler } from '@hono/zod-openapi'
-import type { AppEnv } from '../types'
+import type { WsRouteContext, WsRouteNext, WsRouteReturn } from './route'
 import { upgradeWebSocket } from 'hono/bun'
 import { Controller, Get } from '@/core/controller'
 import { wsRoute } from './route'
 
-type WsHandler = RouteHandler<typeof wsRoute, AppEnv>
-
 @Controller('/api/ws')
 export class WsController {
   @Get(wsRoute)
-  ws(c: Parameters<WsHandler>[0], next: Parameters<WsHandler>[1]): ReturnType<WsHandler> {
+  ws(c: WsRouteContext, next: WsRouteNext): WsRouteReturn {
     return upgradeWebSocket((_c) => {
       return {
         onOpen(_event, ws) {
@@ -24,6 +21,6 @@ export class WsController {
           console.log('WebSocket connection closed')
         },
       }
-    })(c, next) as ReturnType<WsHandler>
+    })(c, next) as WsRouteReturn
   }
 }

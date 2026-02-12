@@ -1,3 +1,4 @@
+import type { HandlerContext, HandlerReturn } from '@/core/controller'
 import { createRoute } from '@hono/zod-openapi'
 import { createErrorSchema, createSuccessSchema } from '../core/response'
 import { FileUploadSchema, UploadResponseSchema } from './schema'
@@ -21,3 +22,6 @@ export const uploadRoute = createRoute({
     400: { content: { 'application/json': { schema: createErrorSchema() } }, description: '参数错误' },
   },
 })
+
+export type UploadRouteContext = HandlerContext<typeof uploadRoute>
+export type UploadRouteReturn = HandlerReturn<typeof uploadRoute>

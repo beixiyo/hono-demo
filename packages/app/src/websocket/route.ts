@@ -1,3 +1,4 @@
+import type { HandlerContext, HandlerNext, HandlerReturn } from '@/core/controller'
 import { createRoute } from '@hono/zod-openapi'
 
 export const wsRoute = createRoute({
@@ -12,3 +13,7 @@ export const wsRoute = createRoute({
     },
   },
 })
+
+export type WsRouteContext = HandlerContext<typeof wsRoute>
+export type WsRouteNext = HandlerNext<typeof wsRoute>
+export type WsRouteReturn = HandlerReturn<typeof wsRoute>

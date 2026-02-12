@@ -1,6 +1,9 @@
 import { join } from 'node:path'
+import { Service } from '@/core/di'
+import { FileServiceToken } from './tokens'
 
-export const fileService = {
+@Service(FileServiceToken)
+export class FileService {
   async saveFile(file: File) {
     const buffer = await file.arrayBuffer()
     const filePath = join(import.meta.dirname, '..', '..', 'public', 'uploads', file.name)
@@ -10,5 +13,5 @@ export const fileService = {
       name: file.name,
       url: `/public/uploads/${file.name}`,
     }
-  },
+  }
 }

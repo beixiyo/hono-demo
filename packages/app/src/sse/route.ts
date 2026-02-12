@@ -1,3 +1,4 @@
+import type { HandlerContext, HandlerReturn } from '@/core/controller'
 import { createRoute } from '@hono/zod-openapi'
 
 export const sseRoute = createRoute({
@@ -18,3 +19,6 @@ export const sseRoute = createRoute({
     },
   },
 })
+
+export type SseRouteContext = HandlerContext<typeof sseRoute>
+export type SseRouteReturn = HandlerReturn<typeof sseRoute>

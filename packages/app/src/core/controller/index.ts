@@ -5,5 +5,5 @@ export { Delete, Get, Options, Patch, Post, Put } from './decorators'
  */
 export { Controller, registerControllers } from './registry'
 
-// 类型按需导出，供扩展或类型标注使用
-export type { ControllerClass, ControllerOptions, RouteMeta, RouteOptions } from './types'
+/** 类型按需导出，供扩展或类型标注使用 */
+export type { ControllerClass, ControllerOptions, HandlerContext, HandlerNext, HandlerReturn, RouteMeta, RouteOptions } from './types'
