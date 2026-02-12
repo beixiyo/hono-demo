@@ -1,6 +1,7 @@
 import type { Context } from 'hono'
 import { HTTPException } from 'hono/http-exception'
 import { MESSAGE_CONFIG } from '@/core/constants'
+import { logger } from '@/utils'
 import { jsonFail } from './response'
 
 export function errorHandler(err: Error, c: Context) {
@@ -8,7 +9,7 @@ export function errorHandler(err: Error, c: Context) {
     return jsonFail(c, err.message || MESSAGE_CONFIG.errorDefault, err.status)
   }
 
-  console.error(`${err.message}\n${err.stack}`)
+  logger.error(`${err.message}\n${err.stack}`)
 
   return jsonFail(c, err.message || MESSAGE_CONFIG.internalServerErrorDefault, 500)
 }

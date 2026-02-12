@@ -9,32 +9,36 @@ import { errorHandler, notFoundHandler } from './core/error-handler'
 import { registerMiddleware } from './core/middleware'
 import { registerOpenAPI } from './core/openapi'
 import './register'
+import { logger } from './utils';
 
-const container = new Container()
-applyToContainer(container)
+/** 创建并配置 DI 容器 */
+function createContainer(): Container {
+  const container = new Container()
+  applyToContainer(container)
+  return container
+}
 
 /**
- * 应用主入口
- * 仅负责核心模块的初始化、配置加载及路由编排
+ * 创建应用实例：中间件、静态资源、路由、OpenAPI、错误处理
  */
-const app = new OpenAPIHono<AppEnv>()
+function createApp(container: Container): OpenAPIHono<AppEnv> {
+  const app = new OpenAPIHono<AppEnv>()
 
-// 1. 注册全局中间件
-registerMiddleware(app)
+  registerMiddleware(app)
 
-// 2. 静态资源服务 (独立于业务路由)
-const rootDir = join(import.meta.dirname, '..')
-app.use('/public/*', serveStatic({ root: rootDir }))
+  const rootDir = join(import.meta.dirname, '..')
+  app.use('/public/*', serveStatic({ root: rootDir }))
 
-// 3. 注册功能模块（传入 container 时 Controller 通过 @Inject 获得依赖）
-registerControllers(app, { container })
+  registerControllers(app, { container })
 
-// 4. 统一配置 OpenAPI 文档
-isDev() && registerOpenAPI(app)
+  if (isDev())
+    registerOpenAPI(app)
 
-// 5. 全局错误与 404 处理
-app.onError(errorHandler)
-app.notFound(notFoundHandler)
+  app.onError(errorHandler)
+  app.notFound(notFoundHandler)
+
+  return app
+}
 
 /**
  * Bun 默认导出支持的配置类型（即 Bun.serve 的选项）
@@ -43,11 +47,20 @@ app.notFound(notFoundHandler)
  */
 export type ServeOptions = Parameters<typeof Bun.serve>[0]
 
-const endpoint: ServeOptions = {
-  fetch: app.fetch,
-  port: Number.parseInt(process.env.PORT || '3002'),
-  websocket: websocket as any,
+/** 构建 Bun.serve 的配置 */
+function createServeOptions(app: OpenAPIHono<AppEnv>): ServeOptions {
+  return {
+    fetch: app.fetch,
+    port: Number.parseInt(process.env.PORT || '3002'),
+    websocket: websocket as any,
+  }
 }
 
-export { app }
+/** 主流程：容器 → 应用 → 服务配置 */
+const container = createContainer()
+const app = createApp(container)
+const endpoint = createServeOptions(app)
+logger.info(`Server is running on port ${endpoint.port}`)
+
+export { app, createApp, createContainer, createServeOptions }
 export default endpoint
