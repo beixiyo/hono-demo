@@ -5,7 +5,7 @@
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
 import type { AppEnv } from '../../types'
 import { CORE_CONFIG } from '../constants'
-import type { ControllerEntry, ControllerClass, ControllerOptions, RouteMeta } from './types'
+import type { ControllerEntry, ControllerClass, ControllerOptions, RouteMeta, RegisterControllersOptions } from './types'
 
 const registry: ControllerEntry[] = []
 
@@ -40,7 +40,9 @@ export function Controller(param: string | ControllerOptions): ClassDecorator {
   return decorator
 }
 
-export function registerControllers(app: OpenAPIHono<AppEnv>) {
+export function registerControllers(app: OpenAPIHono<AppEnv>, options?: RegisterControllersOptions) {
+  const container = options?.container
+
   registry.forEach((entry) => {
     const routes = getRoutes(entry.controller)
     const module = entry.module ?? (routes.length ? new OpenAPIHono<AppEnv>() : undefined)
@@ -51,7 +53,9 @@ export function registerControllers(app: OpenAPIHono<AppEnv>) {
 
     if (routes.length) {
       // 由 core/controller/decorators.ts 装饰器收集的 route 对象
-      const instance = new entry.controller()
+      const instance = container
+        ? container.create(entry.controller)
+        : new entry.controller()
 
       routes.forEach((route) => {
         const routeObject =

@@ -2,6 +2,12 @@ export const CORE_CONFIG = {
   routesKey: Symbol('controller:routes'),
 } as const
 
+/** 依赖注入相关常量 */
+export const DI_CONFIG = {
+  /** 派生装饰器类型标识在装饰器 / 待注册条目上的属性名 */
+  injectTypeKey: '__@inject_type',
+} as const
+
 export const JWT_CONFIG = {
   /**
    * 过期时间（单位 s），即一小时

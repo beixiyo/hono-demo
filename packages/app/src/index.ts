@@ -6,14 +6,17 @@ import { registerMiddleware } from './core/middleware'
 import { errorHandler, notFoundHandler } from './core/error-handler'
 import { registerOpenAPI } from './core/openapi'
 import { registerControllers } from './core/controller'
-
+import { Container, applyToContainer } from './core/di'
+import { isDev } from 'shared'
 import { websocket } from 'hono/bun'
 import './auth'
 import './file'
 import './user'
 import './sse'
 import './websocket'
-import { isDev } from 'shared'
+
+const container = new Container()
+applyToContainer(container)
 
 /**
  * 应用主入口
@@ -28,8 +31,8 @@ registerMiddleware(app)
 const rootDir = join(import.meta.dirname, '..')
 app.use('/public/*', serveStatic({ root: rootDir }))
 
-// 3. 注册功能模块
-registerControllers(app)
+// 3. 注册功能模块（传入 container 时 Controller 通过 @Inject 获得依赖）
+registerControllers(app, { container })
 
 // 4. 统一配置 OpenAPI 文档
 isDev() && registerOpenAPI(app)

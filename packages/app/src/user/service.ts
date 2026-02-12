@@ -1,12 +1,14 @@
 import type { User } from './schema'
+import { UserServiceToken } from './tokens'
+import { Service } from '@/core/di'
 
-export const userService = {
+@Service(UserServiceToken)
+export class UserService {
   async getUserById(id: string): Promise<User> {
-    // 模拟 DB 查询
     return {
       id,
       name: 'Ultra-man',
       age: 20,
     }
-  },
+  }
 }
