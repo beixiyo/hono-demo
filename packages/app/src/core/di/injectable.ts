@@ -1,3 +1,5 @@
+import type { Container } from './container'
+import type { InjectableDecorator, PendingEntry, Token } from './types'
 /**
  * @Injectable 装饰器：标记类为可注入服务，并加入待注册表
  * 入口处调用 applyToContainer(container) 一次性将全部 @Injectable 类注册到容器
@@ -6,8 +8,6 @@
  * 派生装饰器会带有 DI_CONFIG.injectTypeKey 属性便于区分类型。
  */
 import { DI_CONFIG } from '../constants'
-import type { Container } from './container'
-import type { InjectableDecorator, PendingEntry, Token } from './types'
 
 const pending: PendingEntry[] = []
 
@@ -20,7 +20,6 @@ export const Service = createInjectable('service')
 
 /** 仓储层：@Repository() 或 @Repository(Token) */
 export const Repository = createInjectable('repository')
-
 
 /**
  * 创建带语义类型的可注入装饰器。
@@ -42,7 +41,7 @@ function createInjectable(injectType: string): InjectableDecorator {
   }
   const fn = decorator as InjectableDecorator
   fn.injectType = injectType
-    ; (fn as unknown as Record<string, unknown>)[DI_CONFIG.injectTypeKey] = injectType
+  ; (fn as unknown as Record<string, unknown>)[DI_CONFIG.injectTypeKey] = injectType
   return fn
 }
 

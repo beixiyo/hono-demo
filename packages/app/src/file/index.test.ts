@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 import { sign } from 'hono/jwt'
-import { app } from '../index'
 import { JWT_CONFIG, TEST_CONFIG } from '@/core/constants'
+import { app } from '../index'
 
 describe('文件模块功能测试', () => {
   test('文件上传功能测试', async () => {
@@ -12,7 +12,7 @@ describe('文件模块功能测试', () => {
     const token = await sign(
       { sub: 'user123', exp: Math.floor(Date.now() / 1000) + 60 },
       JWT_CONFIG.secret,
-      'HS256'
+      'HS256',
     )
     const res = await app.request('/api/file/upload', {
       method: 'POST',

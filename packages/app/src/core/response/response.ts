@@ -1,13 +1,9 @@
 import type { Context } from 'hono'
-import type { JsonOkOptions, ApiErrorResponse, ApiSuccessResponse } from '@/types'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
+import type { ApiErrorResponse, ApiSuccessResponse, JsonOkOptions } from '@/types'
 import { MESSAGE_CONFIG } from '@/core/constants'
 
-export const jsonOk = <T>(
-  c: Context,
-  data: T,
-  options?: JsonOkOptions
-) => {
+export function jsonOk<T>(c: Context, data: T, options?: JsonOkOptions) {
   const body: ApiSuccessResponse<T> = {
     success: true,
     message: options?.message ?? MESSAGE_CONFIG.successDefault,
@@ -22,11 +18,7 @@ export const jsonOk = <T>(
   return c.json(body, { status: options?.status ?? 200 })
 }
 
-export const jsonFail = (
-  c: Context,
-  message: string,
-  status = 400 as ContentfulStatusCode
-) => {
+export function jsonFail(c: Context, message: string, status = 400 as ContentfulStatusCode) {
   const body: ApiErrorResponse = {
     success: false,
     message,
@@ -36,4 +28,3 @@ export const jsonFail = (
 
   return c.json(body, { status })
 }
-

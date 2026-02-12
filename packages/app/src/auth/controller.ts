@@ -1,9 +1,9 @@
 import type { RouteHandler } from '@hono/zod-openapi'
 import type { AppEnv } from '../types'
-import { authService } from './service'
-import { loginRoute, protectedRoute } from './route'
 import { jsonOk } from '@/core/response'
 import { Controller, Get, Post } from '../core/controller'
+import { loginRoute, protectedRoute } from './route'
+import { authService } from './service'
 
 @Controller('/api/auth')
 export class AuthController {

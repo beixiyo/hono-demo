@@ -10,7 +10,7 @@ export const authService = {
         exp: Math.floor(Date.now() / 1000) + JWT_CONFIG.expSeconds,
       },
       JWT_CONFIG.secret,
-      'HS256'
+      'HS256',
     )
   },
 }

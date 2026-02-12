@@ -14,7 +14,7 @@ describe('SSE Module', () => {
     })
     expect(res.status).toBe(200)
     expect(res.headers.get('content-type')).toContain('text/event-stream')
-    
+
     // 读取第一条数据验证
     const reader = res.body?.getReader()
     if (reader) {

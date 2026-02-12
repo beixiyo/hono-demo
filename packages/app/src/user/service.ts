@@ -1,6 +1,6 @@
 import type { User } from './schema'
-import { UserServiceToken } from './tokens'
 import { Service } from '@/core/di'
+import { UserServiceToken } from './tokens'
 
 @Service(UserServiceToken)
 export class UserService {

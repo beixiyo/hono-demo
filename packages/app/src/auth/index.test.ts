@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 import { sign } from 'hono/jwt'
-import { app } from '../index'
 import { JWT_CONFIG, TEST_CONFIG } from '@/core/constants'
+import { app } from '../index'
 
 describe('认证模块功能测试', () => {
   // 1. JWT 功能测试

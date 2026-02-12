@@ -1,11 +1,11 @@
+import type { AppEnv } from '../../types'
+import type { ControllerClass, ControllerEntry, ControllerOptions, RegisterControllersOptions, RouteMeta } from './types'
 /**
  * 控制器注册表
  * 负责收集模块并统一装配到 Hono
  */
-import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
-import type { AppEnv } from '../../types'
+import { createRoute, OpenAPIHono } from '@hono/zod-openapi'
 import { CORE_CONFIG } from '../constants'
-import type { ControllerEntry, ControllerClass, ControllerOptions, RouteMeta, RegisterControllersOptions } from './types'
 
 const registry: ControllerEntry[] = []
 
@@ -18,7 +18,7 @@ export function addRoute(target: object, meta: RouteMeta) {
   const constructor = (target as any).constructor
   const routes = (constructor as any)[CORE_CONFIG.routesKey] ?? []
   routes.push(meta)
-    ; (constructor as any)[CORE_CONFIG.routesKey] = routes
+  ; (constructor as any)[CORE_CONFIG.routesKey] = routes
 }
 
 export function Controller(basePath: string): ClassDecorator
@@ -30,7 +30,7 @@ export function Controller(param: string | ControllerOptions): ClassDecorator {
     const controller = target as unknown as ControllerClass
     const module = options.module
 
-    if (registry.some((entry) => entry.basePath === options.basePath)) {
+    if (registry.some(entry => entry.basePath === options.basePath)) {
       throw new Error(`Controller basePath 重复: ${options.basePath}`)
     }
 
@@ -52,14 +52,16 @@ export function registerControllers(app: OpenAPIHono<AppEnv>, options?: Register
     }
 
     if (routes.length) {
+      const DefaultController = entry.controller
+
       // 由 core/controller/decorators.ts 装饰器收集的 route 对象
       const instance = container
         ? container.create(entry.controller)
-        : new entry.controller()
+        : new DefaultController()
 
       routes.forEach((route) => {
-        const routeObject =
-          'route' in route
+        const routeObject
+          = 'route' in route
             ? route.route
             : createRoute({ method: route.method, path: route.path, ...route.options })
 

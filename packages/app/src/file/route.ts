@@ -1,6 +1,6 @@
 import { createRoute } from '@hono/zod-openapi'
-import { FileUploadSchema, UploadResponseSchema } from './schema'
 import { createErrorSchema, createSuccessSchema } from '../core/response'
+import { FileUploadSchema, UploadResponseSchema } from './schema'
 
 export const uploadRoute = createRoute({
   method: 'post',

@@ -1,8 +1,8 @@
-import { upgradeWebSocket } from 'hono/bun'
 import type { RouteHandler } from '@hono/zod-openapi'
 import type { AppEnv } from '../types'
-import { wsRoute } from './route'
+import { upgradeWebSocket } from 'hono/bun'
 import { Controller, Get } from '@/core/controller'
+import { wsRoute } from './route'
 
 type WsHandler = RouteHandler<typeof wsRoute, AppEnv>
 

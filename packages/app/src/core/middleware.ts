@@ -1,22 +1,22 @@
-import { OpenAPIHono } from '@hono/zod-openapi'
+import type { OpenAPIHono } from '@hono/zod-openapi'
 import type { AppEnv } from '../types'
-import { logger } from 'hono/logger'
+import { cache } from 'hono/cache'
+import { compress } from 'hono/compress'
 import { cors } from 'hono/cors'
 import { csrf } from 'hono/csrf'
-import { secureHeaders } from 'hono/secure-headers'
-import { requestId } from 'hono/request-id'
-import { prettyJSON } from 'hono/pretty-json'
 import { etag } from 'hono/etag'
-import { compress } from 'hono/compress'
-import { cache } from 'hono/cache'
 import { jwt } from 'hono/jwt'
+import { logger } from 'hono/logger'
+import { prettyJSON } from 'hono/pretty-json'
+import { requestId } from 'hono/request-id'
+import { secureHeaders } from 'hono/secure-headers'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'hono-demo-secret-change-in-production'
 const JWT_PUBLIC_PATHS = new Set([
   '/api/auth/jwt/login',
 ])
 
-export const registerMiddleware = (app: OpenAPIHono<AppEnv>) => {
+export function registerMiddleware(app: OpenAPIHono<AppEnv>) {
   // 1. 基础与安全
   app.use('*', requestId())
   app.use('*', logger())

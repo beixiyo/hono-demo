@@ -7,7 +7,7 @@ const PaginationSchema = z.object({
   totalPages: z.number().int().min(0).openapi({ example: 10 }),
 }).openapi('Pagination')
 
-export const createSuccessSchema = <T extends z.ZodTypeAny>(dataSchema: T) => {
+export function createSuccessSchema<T extends z.ZodTypeAny>(dataSchema: T) {
   return z.object({
     success: z.literal(true).openapi({ example: true }),
     message: z.string().openapi({ example: '成功' }),
@@ -16,13 +16,13 @@ export const createSuccessSchema = <T extends z.ZodTypeAny>(dataSchema: T) => {
   })
 }
 
-export const createPagedSuccessSchema = <T extends z.ZodTypeAny>(dataSchema: T) => {
+export function createPagedSuccessSchema<T extends z.ZodTypeAny>(dataSchema: T) {
   return createSuccessSchema(dataSchema).extend({
     pagination: PaginationSchema,
   })
 }
 
-export const createErrorSchema = () => {
+export function createErrorSchema() {
   return z.object({
     success: z.literal(false).openapi({ example: false }),
     message: z.string().openapi({ example: '错误信息' }),

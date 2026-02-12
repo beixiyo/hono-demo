@@ -1,6 +1,6 @@
 import { createRoute } from '@hono/zod-openapi'
-import { ParamsSchema, UserSchema } from './schema'
 import { createSuccessSchema } from '../core/response'
+import { ParamsSchema, UserSchema } from './schema'
 
 export const getUserRoute = createRoute({
   method: 'get',

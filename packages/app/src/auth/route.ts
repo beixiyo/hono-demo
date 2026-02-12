@@ -1,6 +1,6 @@
 import { createRoute } from '@hono/zod-openapi'
-import { LoginResponseSchema, MessageSchema } from './schema'
 import { createErrorSchema, createSuccessSchema } from '../core/response'
+import { LoginResponseSchema, MessageSchema } from './schema'
 
 export const loginRoute = createRoute({
   method: 'post',

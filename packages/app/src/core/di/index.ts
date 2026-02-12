@@ -1,3 +1,4 @@
+export { DI_CONFIG } from '../constants'
 /**
  * 依赖注入模块
  *
@@ -19,12 +20,11 @@
  * 自动注册：在 Service 类上使用 @Injectable() 或 @Injectable(Token)，入口调用 applyToContainer(container) 即可，无需手写 register。
  */
 export { Container } from './container'
-export { Inject, DI_PARAM_TOKENS } from './inject'
-export { DI_CONFIG } from '../constants'
+export { DI_PARAM_TOKENS, Inject } from './inject'
 export {
-  Injectable,
   applyToContainer,
-  Service,
+  Injectable,
   Repository,
+  Service,
 } from './injectable'
-export type { Token, Scope, BindingOptions, InjectableDecorator, PendingEntry } from './types'
+export type { BindingOptions, InjectableDecorator, PendingEntry, Scope, Token } from './types'

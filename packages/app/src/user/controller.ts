@@ -1,11 +1,11 @@
 import type { RouteHandler } from '@hono/zod-openapi'
 import type { AppEnv } from '../types'
-import { getUserRoute } from './route'
-import { jsonOk } from '@/core/response'
+import type { UserService } from './service'
 import { Controller, Get } from '@/core/controller'
+import { jsonOk } from '@/core/response'
 import { Inject } from '../core/di'
+import { getUserRoute } from './route'
 import { UserServiceToken } from './tokens'
-import { UserService } from './service'
 
 type GetUserHandler = RouteHandler<typeof getUserRoute, AppEnv>
 

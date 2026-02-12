@@ -1,19 +1,14 @@
+import type { AppEnv } from './types'
 import { join } from 'node:path'
 import { OpenAPIHono } from '@hono/zod-openapi'
-import { serveStatic } from 'hono/bun'
-import type { AppEnv } from './types'
-import { registerMiddleware } from './core/middleware'
-import { errorHandler, notFoundHandler } from './core/error-handler'
-import { registerOpenAPI } from './core/openapi'
-import { registerControllers } from './core/controller'
-import { Container, applyToContainer } from './core/di'
+import { serveStatic, websocket } from 'hono/bun'
 import { isDev } from 'shared'
-import { websocket } from 'hono/bun'
-import './auth'
-import './file'
-import './user'
-import './sse'
-import './websocket'
+import { registerControllers } from './core/controller'
+import { applyToContainer, Container } from './core/di'
+import { errorHandler, notFoundHandler } from './core/error-handler'
+import { registerMiddleware } from './core/middleware'
+import { registerOpenAPI } from './core/openapi'
+import './register'
 
 const container = new Container()
 applyToContainer(container)
@@ -50,8 +45,8 @@ export type ServeOptions = Parameters<typeof Bun.serve>[0]
 
 const endpoint: ServeOptions = {
   fetch: app.fetch,
-  port: parseInt(process.env.PORT || '3002'),
-  websocket: websocket as any
+  port: Number.parseInt(process.env.PORT || '3002'),
+  websocket: websocket as any,
 }
 
 export { app }

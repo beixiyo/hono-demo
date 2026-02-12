@@ -1,6 +1,6 @@
-import { createRoute } from '@hono/zod-openapi'
-import { addRoute } from './registry'
+import type { createRoute } from '@hono/zod-openapi'
 import type { MethodName, RouteOptions } from './types'
+import { addRoute } from './registry'
 
 function createMethodDecorator(method: MethodName) {
   return function (pathOrRoute: string | ReturnType<typeof createRoute>, options?: RouteOptions) {
