@@ -3,7 +3,7 @@ import type { AppEnv } from '../types'
 import { fileService } from './service'
 import { uploadRoute } from './route'
 import { jsonFail, jsonOk } from '@/core/response'
-import { Controller, Post } from '../core/controller-registry'
+import { Controller, Post } from '@/core/controller'
 
 @Controller('/api/file')
 export class FileController {

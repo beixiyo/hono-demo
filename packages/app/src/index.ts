@@ -5,7 +5,7 @@ import type { AppEnv } from './types'
 import { registerMiddleware } from './core/middleware'
 import { errorHandler, notFoundHandler } from './core/error-handler'
 import { registerOpenAPI } from './core/openapi'
-import { registerControllers } from './core/controller-registry'
+import { registerControllers } from './core/controller'
 
 import { websocket } from 'hono/bun'
 import './auth'

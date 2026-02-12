@@ -2,7 +2,7 @@ import { streamSSE } from 'hono/streaming'
 import type { RouteHandler } from '@hono/zod-openapi'
 import type { AppEnv } from '../types'
 import { sseRoute } from './route'
-import { Controller, Get } from '../core/controller-registry'
+import { Controller, Get } from '@/core/controller'
 
 type SseHandler = RouteHandler<typeof sseRoute, AppEnv>
 

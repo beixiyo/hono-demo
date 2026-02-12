@@ -3,7 +3,7 @@ import type { AppEnv } from '../types'
 import { authService } from './service'
 import { loginRoute, protectedRoute } from './route'
 import { jsonOk } from '@/core/response'
-import { Controller, Get, Post } from '../core/controller-registry'
+import { Controller, Get, Post } from '../core/controller'
 
 @Controller('/api/auth')
 export class AuthController {

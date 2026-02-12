@@ -3,7 +3,7 @@ import type { AppEnv } from '../types'
 import { userService } from './service'
 import { getUserRoute } from './route'
 import { jsonOk } from '@/core/response'
-import { Controller, Get } from '../core/controller-registry'
+import { Controller, Get } from '@/core/controller'
 
 type GetUserHandler = RouteHandler<typeof getUserRoute, AppEnv>
 
