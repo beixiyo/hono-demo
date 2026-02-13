@@ -5,22 +5,13 @@ import { drizzle as drizzleBunSql } from 'drizzle-orm/bun-sql'
 import { drizzle as drizzleSqlite } from 'drizzle-orm/bun-sqlite'
 
 /**
+ * @description
  * Drizzle ORM 客户端（双配置：PostgreSQL / SQLite）
- *
- * A 方案：**明确区分不同方言的 Db 与 Token**
- *
- * - PostgreSQL：通过 Bun SQL（bun-sql）连接，对应 `PgDb` / `PgDbToken` / `createPgDb`
- * - SQLite：通过 bun:sqlite 连接，对应 `SqliteDb` / `SqliteDbToken` / `createSqliteDb`
- *
- * Service 层应显式依赖某一种方言的 Db 类型（例如 users 表当前使用的是 `pgTable`，
- * 则应注入 `PgDb`，而不是把 Pg / Sqlite 混成一个联合类型）。
  */
 
 export type PgDb = ReturnType<typeof drizzleBunSql>
 export type SqliteDb = ReturnType<typeof drizzleSqlite>
-/** DI Token：PostgreSQL 版本 Db（与使用 `pgTable` 的 schema 搭配） */
 export const PgDbToken: Token<PgDb> = Symbol('PgDb')
-/** DI Token：SQLite 版本 Db（与使用 `sqliteTable` 的 schema 搭配） */
 export const SqliteDbToken: Token<SqliteDb> = Symbol('SqliteDb')
 
 /**

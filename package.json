@@ -6,7 +6,11 @@
     "dev": "bun run -F '*' dev",
     "build": "bun run -F '*' build",
     "test": "bun run -F '*' test",
-    "lint": "bun run -F '*' lint"
+    "lint": "bun run -F '*' lint",
+    "======== db =========": "=================",
+    "db:push": "bun x drizzle-kit push",
+    "db:generate": "bun x drizzle-kit generate",
+    "db:migrate": "bun x drizzle-kit migrate"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^7.4.3",

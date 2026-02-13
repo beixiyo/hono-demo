@@ -10,3 +10,12 @@ export const users = pgTable('users', {
   name: text('name').notNull(),
   age: integer('age').notNull(),
 })
+
+/**
+ * 示例：posts 表（用于联表示例，关联 users）
+ */
+export const posts = pgTable('posts', {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  userId: text('user_id').notNull(), // 关联 users.id
+})
