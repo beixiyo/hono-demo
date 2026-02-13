@@ -1,3 +1,4 @@
+import type { Container } from './core/di'
 import type { AppEnv } from './types'
 import { join } from 'node:path'
 import { OpenAPIHono } from '@hono/zod-openapi'
@@ -5,30 +6,11 @@ import { serveStatic, websocket } from 'hono/bun'
 import { isDev } from 'utils'
 import { OPENAPI_CONFIG } from './core/constants'
 import { registerControllers } from './core/controller'
-import { applyToContainer, Container } from './core/di'
 import { errorHandler, notFoundHandler } from './core/error-handler'
 import { registerMiddleware } from './core/middleware'
 import { registerOpenAPI } from './core/openapi'
-import { createPgDb, PgDbToken } from './db/client'
+import { createContainer } from './register'
 import { logger } from './utils'
-import './register'
-
-/** 创建并配置 DI 容器 */
-function createContainer(): Container {
-  const container = new Container()
-
-  /**
-   * 注册基础设施（数据库等）
-   *
-   * users 等表当前使用的是 `pgTable`，因此这里显式注册 PostgreSQL 版本的 Db。
-   * 若未来需要 SQLite，可在此处额外注册 `SqliteDbToken`，并为其编写独立的 Repository / Service。
-   */
-  const db = createPgDb()
-  container.register({ token: PgDbToken, useValue: db })
-
-  applyToContainer(container)
-  return container
-}
 
 /**
  * 创建应用实例：中间件、静态资源、路由、OpenAPI、错误处理
@@ -68,7 +50,9 @@ function createServeOptions(app: OpenAPIHono<AppEnv>): ServeOptions {
   }
 }
 
-/** 主流程：容器 → 应用 → 服务配置 */
+/**
+ * 主流程：容器 → 应用 → 服务配置
+ */
 const container = createContainer()
 const app = createApp(container)
 const endpoint = createServeOptions(app)
