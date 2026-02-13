@@ -2,7 +2,8 @@ import type { AppEnv } from './types'
 import { join } from 'node:path'
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { serveStatic, websocket } from 'hono/bun'
-import { isDev } from 'shared'
+import { isDev } from 'utils'
+import { OPENAPI_CONFIG } from './core/constants'
 import { registerControllers } from './core/controller'
 import { applyToContainer, Container } from './core/di'
 import { errorHandler, notFoundHandler } from './core/error-handler'
@@ -71,7 +72,7 @@ function createServeOptions(app: OpenAPIHono<AppEnv>): ServeOptions {
 const container = createContainer()
 const app = createApp(container)
 const endpoint = createServeOptions(app)
-logger.info(`Server is running on port ${endpoint.port}`)
+logger.info(`Docs is running at http://localhost:${endpoint.port}${OPENAPI_CONFIG.uiPath}`)
 
 export { app, createApp, createContainer, createServeOptions }
 export default endpoint

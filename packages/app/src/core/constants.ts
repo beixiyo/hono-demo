@@ -37,8 +37,7 @@ export const SCALAR_CONFIG = {
   preferredSecurityScheme: '',
   httpBearerName: 'HTTP Bearer',
   // 仅用于文档示例展示
-  demoBearerToken:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzcwODI4MjY3fQ.Eds5oBpBFOzh-Dtb_rZ12H9ixox5ZIvj4k1oc1GEfUM',
+  demoBearerToken: 'eyJhbGciO...',
 } as const
 
 export const MESSAGE_CONFIG = {

@@ -8,8 +8,8 @@
 .
 ├── package.json          # 根配置，workspaces: ["packages/*"]
 ├── packages/
-│   ├── app/              # Hono 应用，依赖 shared
-│   └── shared/           # 共享逻辑，供 app 通过 workspace:* 引用
+│   ├── app/              # Hono 应用
+│   └── utils/           # 共享逻辑，供 app 通过 workspace:* 引用
 ```
 
 ## 前置要求
@@ -24,7 +24,7 @@
 bun install
 ```
 
-会为所有 workspace 安装依赖并链接 `shared` 到 `app`
+会为所有 workspace 安装依赖并链接 `utils` 到 `app`
 
 ## 常用命令
 
@@ -39,7 +39,6 @@ bun install
 
 ```bash
 cd packages/app && bun run dev   # 启动 Hono，默认 http://localhost:3000
-cd packages/shared && bun test   # 运行 shared 的测试
 ```
 
 ## 环境变量
