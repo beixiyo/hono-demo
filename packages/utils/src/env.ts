@@ -1,7 +1,15 @@
 export function isDev() {
-  return process.env.NODE_ENV === 'development'
+  if (typeof globalThis.process !== 'undefined') {
+    return globalThis.process.env.NODE_ENV === 'development'
+  }
+
+  return import.meta.env.MODE === 'development'
 }
 
 export function isProd() {
-  return process.env.NODE_ENV === 'production'
+  if (typeof globalThis.process !== 'undefined') {
+    return globalThis.process.env.NODE_ENV === 'production'
+  }
+
+  return import.meta.env.MODE === 'production'
 }
